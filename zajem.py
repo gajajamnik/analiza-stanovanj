@@ -1,8 +1,24 @@
 import re
 import orodja
 
-# zajem podatkov iz strani vsake nepremicnine posebej
+#vzorci za glavno stran
+vzorec_bloka = re.compile(
+    r'<div class="oglas_container oglasbold oglasi.*?'
+    r'</div>\n\W*<div class="clearer"></div>\n\W*</div>\n\W*</div>'
+)
 
+vzorec_stanovanja = re.compile(
+    r'oglasi.*?id="o(?P<id>\d{7})"'   #ID stanovanja
+    r'<span class="tipi">(?P<tip>.*?)</span>' #tip stanovanja
+)
+
+#vzorci na posamezni strani oglasa
+
+
+
+
+
+# zajem podatkov iz strani vsake nepremicnine posebej
 def zajem_posameznega_oglasa(seznam):
     for url, id in seznam:
         datoteka = f'zajete_strani/oglasi/{id}.html'
@@ -10,8 +26,7 @@ def zajem_posameznega_oglasa(seznam):
         print(f'Uspesno shranjen oglas id: {id}')
 
 # zajem podatkov iz glavnih strani
-def zajem_strani(st_strani=57):
-    
+def zajem_strani(st_strani=57):  
     seznam = []
     vzorec_url_id = r'<!--<meta itemprop="url" content="(.+stanovanje_(.+)/)" />--'
     
