@@ -1,7 +1,10 @@
 import re
 import orodja
+import os
 
 #vzorci za glavno stran
+vzorec_url_id = r'<!--<meta itemprop="url" content="(?P<url>.+stanovanje_(?P<id>.+)/)" />--'
+
 vzorec_bloka = re.compile(
     r'<div class="oglas_container oglasbold oglasi.*?'
     r'</div>\n\W*<div class="clearer"></div>\n\W*</div>\n\W*</div>'
@@ -13,22 +16,45 @@ vzorec_stanovanja = re.compile(
 )
 
 #vzorci na posamezni strani oglasa
+vzorec_bloka_stran =(
+    r'<div class="clearer"></div><div class="more_info">.*?'
+    r'EUR/mes</div>'
+)
+vzorec_id_oglas = re.compile(r'Referenčna št.:.*(?P<id>\d{7})</strong>')
+vzorec_podatki = re.compile(
+    r'<div class="kratek" itemprop="description"><strong class="rdeca">.*'
+    r', (?P<kvadratura>[\d,]*) m2,'
+    r'(?P<tip>.*?),'
+    r' zgrajen.? l.\s?(?P<leto>\d{4}).*'
+    r'Cena:.*?(?P<cena>[\d,.]*) EUR.*?'
+    #r'Referenčna št.:</div><div class="dsc"><strong>(?P<id>\d{7})</strong>'
+)
 
-
+vzorec_lokacije = re.compile(
+    r'<div class="more_info">.*'
+    r'Regija: (?P<regija>.*) \| '
+    r'Upravna enota:(?P<upravna>.*) \| '
+    r'Občina: (?P<obcina>.*)</div>'
+)
 
 
 
 # zajem podatkov iz strani vsake nepremicnine posebej
 def zajem_posameznega_oglasa(seznam):
+    seznam_slovarjev = []
     for url, id in seznam:
         datoteka = f'zajete_strani/oglasi/{id}.html'
         orodja.shrani_spletno_stran(url, datoteka)
         print(f'Uspesno shranjen oglas id: {id}')
+        vsebina = orodja.vsebina_datoteke(datoteka)
+        slovar_podatkov = izloci_podatke(vsebina)
+        seznam_slovarjev.append(slovar_podatkov)
+    return seznam_slovarjev
 
 # zajem podatkov iz glavnih strani
 def zajem_strani(st_strani=57):  
     seznam = []
-    vzorec_url_id = r'<!--<meta itemprop="url" content="(.+stanovanje_(.+)/)" />--'
+    
     
     for i in range(st_strani):
         url_strani = f'https://www.nepremicnine.net/oglasi-oddaja/stanovanje/{i}/'
@@ -39,11 +65,34 @@ def zajem_strani(st_strani=57):
         #ustvari seznam naborov (url, id)
         seznam_url_id = re.findall(vzorec_url_id, orodja.vsebina_datoteke(datoteka))
         seznam += seznam_url_id
-        print(f'Dolzina seznama: {len(seznam)}')
     
     #zajamemo še vsako stran posebaj
-    zajem_posameznega_oglasa(seznam)
+    seznam_slovarjev = zajem_posameznega_oglasa(seznam)
+    
+    #shranimo podatke v csv
+    orodja.zapisi_csv(
+        seznam_slovarjev,
+        ['id', 'kvadratura', 'tip', 'leto', 'cena', 'regija', 'upravna', 'obcina'],
+        'obdelani-podatki/podatki.csv'
+    )
+    print(f'Dolzina seznama je {len(seznam)}')
 
 
-zajem_strani()
+def izloci_podatke(stran):
+    slovar = {}
+    for zadetek in re.finditer(vzorec_id_oglas, stran):
+        slovar_url = zadetek.groupdict()
+        slovar.update(slovar_url)
+        #print(slovar_url_id)
+    for zadetek in re.finditer(vzorec_podatki, stran):
+        slovar_podatkov = zadetek.groupdict()
+        slovar.update(slovar_podatkov)
+        #print(slovar_podatkov)
+    for zadetek in re.finditer(vzorec_lokacije, stran):
+        slovar_lokacije = zadetek.groupdict()
+        slovar.update(slovar_lokacije)
+    print(slovar)
+    return slovar
+
+zajem_strani(1)
 
