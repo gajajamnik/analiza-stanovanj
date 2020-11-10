@@ -49,6 +49,8 @@ def zajem_posameznega_oglasa(seznam):
         vsebina = orodja.vsebina_datoteke(datoteka)
         slovar_podatkov = izloci_podatke(vsebina)
         seznam_slovarjev.append(slovar_podatkov)
+    #slovarje uredimo po id-ju
+    seznam_slovarjev.sort(key=lambda stan: stan['id'])
     return seznam_slovarjev
 
 # zajem podatkov iz glavnih strani
