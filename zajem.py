@@ -5,6 +5,7 @@ import os
 # VZORCI REGULARNIH IZRAZOV
 #vzorci za glavno stran
 vzorec_url_id = r'<!--<meta itemprop="url" content="(?P<url>.+stanovanje_(?P<id>.+)/)" />--'
+vzorec_id_stran = r'<!--<meta itemprop="url" content=".+stanovanje_(?P<id>.+)/" />--'
 
 vzorec_bloka = re.compile(
     r'<div class="oglas_container oglasbold oglasi.*?'
@@ -58,7 +59,7 @@ def zajem_strani(st_strani=57):
     seznam = []  #seznam naborov (url, id)
     
     #shrani glavne strani in iz njih izloci id stanovanj ter pripadajoc url
-    for i in range(st_strani):
+    for i in range(1, st_strani + 1):
         url_strani = f'https://www.nepremicnine.net/oglasi-oddaja/stanovanje/{i}/'
         datoteka = f'zajete_strani/stanovanja/stanovanja{i * 30 + 1}-{(i+1) * 30}.html'
         orodja.shrani_spletno_stran(url_strani, datoteka)
@@ -79,10 +80,6 @@ def zajem_strani(st_strani=57):
         'obdelani-podatki/podatki.csv'
     )
 
-    #iz seznama naborov naredimo slovar
-    slovar_urljev = [dict(seznam)]
-    #ta slovar pretvorimo v csv
-    #
     print(f'Dolzina seznama je {len(seznam)}')
 
 
@@ -100,7 +97,35 @@ def izloci_podatke(stran):
         slovar_lokacije = zadetek.groupdict()
         slovar.update(slovar_lokacije)
     print(slovar)
+    obdelaj_podatke(slovar)
     return slovar
 
-zajem_strani(1)
 
+def obdelaj_podatke(slovar):
+    slovar['id'] = slovar['id'].strip('\'')
+    slovar['kvadratura'] = slovar['kvadratura'].strip('\'')
+    slovar['cena'] = slovar['cena'].strip('\'')
+
+def zajem_studentskih_stanovanj(st_strani=12):
+    seznam_slovarjev = []
+    for i in range(1, st_strani + 1):
+        url = ''
+        if i == 1:
+            url = 'https://www.nepremicnine.net/za-studente.html'
+        else:
+            url = f'https://www.nepremicnine.net/za-studente.html/{i}/'
+        datoteka = f'zajete_strani/studenti/za_studente{i}'
+        orodja.shrani_spletno_stran(url, datoteka)
+        vsebina = orodja.vsebina_datoteke(datoteka)
+        for zadetek in re.finditer(vzorec_id_stran, vsebina):
+            slovar = zadetek.groupdict()
+            seznam_slovarjev.append(slovar)
+    orodja.zapisi_csv(
+        seznam_slovarjev,
+        ['id'],
+        'obdelani-podatki/studenti.csv'
+    )
+
+zajem_strani()
+
+zajem_studentskih_stanovanj()
