@@ -46,7 +46,7 @@ def zajem_posameznega_oglasa(seznam):
     for url, id in seznam:
         datoteka = f'zajete_strani/oglasi/{id}.html'
         orodja.shrani_spletno_stran(url, datoteka)
-        print(f'Uspesno shranjen oglas id: {id}')
+        
         vsebina = orodja.vsebina_datoteke(datoteka)
         slovar_podatkov = izloci_podatke(vsebina)
         seznam_slovarjev.append(slovar_podatkov)
@@ -63,13 +63,11 @@ def zajem_strani(st_strani=57):
         url_strani = f'https://www.nepremicnine.net/oglasi-oddaja/stanovanje/{i}/'
         datoteka = f'zajete_strani/stanovanja/stanovanja{i * 30 + 1}-{(i+1) * 30}.html'
         orodja.shrani_spletno_stran(url_strani, datoteka)
-        print(f'Uspesno sharnjena stran{i}')
 
         #ustvari seznam naborov (url, id)
         seznam_url_id = re.findall(vzorec_url_id, orodja.vsebina_datoteke(datoteka))
         seznam += seznam_url_id
     
-    print(seznam)
     #zajamemo še vsako stran posebej in sprejme seznam slovarjev z obdelanimi podatki
     seznam_slovarjev = zajem_posameznega_oglasa(seznam)
     
@@ -80,7 +78,6 @@ def zajem_strani(st_strani=57):
         'obdelani-podatki/podatki.csv'
     )
 
-    print(f'Dolzina seznama je {len(seznam)}')
 
 
 def izloci_podatke(stran):
@@ -88,11 +85,11 @@ def izloci_podatke(stran):
     for zadetek in re.finditer(vzorec_id_oglas, stran):
         slovar_url = zadetek.groupdict()
         slovar.update(slovar_url)
-        #print(slovar_url_id)
+
     for zadetek in re.finditer(vzorec_podatki, stran):
         slovar_podatkov = zadetek.groupdict()
         slovar.update(slovar_podatkov)
-        #print(slovar_podatkov)
+        
     for zadetek in re.finditer(vzorec_lokacije, stran):
         slovar_lokacije = zadetek.groupdict()
         slovar.update(slovar_lokacije)
@@ -106,6 +103,8 @@ def obdelaj_podatke(slovar):
     slovar['kvadratura'] = slovar['kvadratura'].strip('\'')
     slovar['cena'] = slovar['cena'].strip('\'')
 
+
+#zajame strani na katerih so stanovanja primerna za studente in pobere csv
 def zajem_studentskih_stanovanj(st_strani=12):
     seznam_slovarjev = []
     for i in range(1, st_strani + 1):
@@ -120,6 +119,7 @@ def zajem_studentskih_stanovanj(st_strani=12):
         for zadetek in re.finditer(vzorec_id_stran, vsebina):
             slovar = zadetek.groupdict()
             seznam_slovarjev.append(slovar)
+    seznam_slovarjev.sort(key=lambda stan: stan['id'])
     orodja.zapisi_csv(
         seznam_slovarjev,
         ['id'],
