@@ -2,6 +2,7 @@ import re
 import orodja
 import os
 
+#VZORCI REGULARNIH IZRAZOV
 #vzorci za glavno stran
 vzorec_url_id = r'<!--<meta itemprop="url" content="(?P<url>.+stanovanje_(?P<id>.+)/)" />--'
 
@@ -11,8 +12,8 @@ vzorec_bloka = re.compile(
 )
 
 vzorec_stanovanja = re.compile(
-    r'oglasi.*?id="o(?P<id>\d{7})"'   #ID stanovanja
-    r'<span class="tipi">(?P<tip>.*?)</span>' #tip stanovanja
+    r'oglasi.*?id="o(?P<id>\d{7})"'
+    r'<span class="tipi">(?P<tip>.*?)</span>'
 )
 
 #vzorci na posamezni strani oglasa
@@ -25,9 +26,8 @@ vzorec_podatki = re.compile(
     r'<div class="kratek" itemprop="description"><strong class="rdeca">.*'
     r', (?P<kvadratura>[\d,]*) m2,'
     r'(?P<tip>.*?),'
-    r' zgrajen.? l.\s?(?P<leto>\d{4}).*'
+    r' .*l\.\s?(?P<leto>\d{4}).*'
     r'Cena:.*?(?P<cena>[\d,.]*) EUR.*?'
-    #r'Referenčna št.:</div><div class="dsc"><strong>(?P<id>\d{7})</strong>'
 )
 
 vzorec_lokacije = re.compile(
@@ -53,7 +53,7 @@ def zajem_posameznega_oglasa(seznam):
 
 # zajem podatkov iz glavnih strani
 def zajem_strani(st_strani=57):  
-    seznam = []
+    seznam = []  #seznam naborov (url, id)
     
     
     for i in range(st_strani):
@@ -69,12 +69,17 @@ def zajem_strani(st_strani=57):
     #zajamemo še vsako stran posebaj
     seznam_slovarjev = zajem_posameznega_oglasa(seznam)
     
-    #shranimo podatke v csv
+    #shranimo podatke iz posamezne strani v csv
     orodja.zapisi_csv(
         seznam_slovarjev,
         ['id', 'kvadratura', 'tip', 'leto', 'cena', 'regija', 'upravna', 'obcina'],
         'obdelani-podatki/podatki.csv'
     )
+
+    #iz seznama naborov naredimo slovar
+    #slovar_urljev = dict(seznam)
+    #ta slovar pretvorimo v csv
+    #orodja.zapisi_csv()
     print(f'Dolzina seznama je {len(seznam)}')
 
 
