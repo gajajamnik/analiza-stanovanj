@@ -2,7 +2,7 @@ import re
 import orodja
 import os
 
-#VZORCI REGULARNIH IZRAZOV
+# VZORCI REGULARNIH IZRAZOV
 #vzorci za glavno stran
 vzorec_url_id = r'<!--<meta itemprop="url" content="(?P<url>.+stanovanje_(?P<id>.+)/)" />--'
 
@@ -37,9 +37,9 @@ vzorec_lokacije = re.compile(
     r'Občina: (?P<obcina>.*)</div>'
 )
 
+# PROGRAM
 
-
-# zajem podatkov iz strani vsake nepremicnine posebej
+# zajame podatke iz strani vsake nepremicnine posebej in spravi v seznam slovarjev
 def zajem_posameznega_oglasa(seznam):
     seznam_slovarjev = []
     for url, id in seznam:
@@ -57,7 +57,7 @@ def zajem_posameznega_oglasa(seznam):
 def zajem_strani(st_strani=57):  
     seznam = []  #seznam naborov (url, id)
     
-    
+    #shrani glavne strani in iz njih izloci id stanovanj ter pripadajoc url
     for i in range(st_strani):
         url_strani = f'https://www.nepremicnine.net/oglasi-oddaja/stanovanje/{i}/'
         datoteka = f'zajete_strani/stanovanja/stanovanja{i * 30 + 1}-{(i+1) * 30}.html'
@@ -68,7 +68,8 @@ def zajem_strani(st_strani=57):
         seznam_url_id = re.findall(vzorec_url_id, orodja.vsebina_datoteke(datoteka))
         seznam += seznam_url_id
     
-    #zajamemo še vsako stran posebaj
+    print(seznam)
+    #zajamemo še vsako stran posebej in sprejme seznam slovarjev z obdelanimi podatki
     seznam_slovarjev = zajem_posameznega_oglasa(seznam)
     
     #shranimo podatke iz posamezne strani v csv
@@ -79,9 +80,9 @@ def zajem_strani(st_strani=57):
     )
 
     #iz seznama naborov naredimo slovar
-    #slovar_urljev = dict(seznam)
+    slovar_urljev = [dict(seznam)]
     #ta slovar pretvorimo v csv
-    #orodja.zapisi_csv()
+    #
     print(f'Dolzina seznama je {len(seznam)}')
 
 
