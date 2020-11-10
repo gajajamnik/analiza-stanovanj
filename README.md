@@ -9,8 +9,9 @@ Za projektno nalogo pri Programiranju 1 bom analizirala (trenutno 1692) stanovan
 * kvadraturo stanovanja
 * tip stanovanja (garsonjera, 1-sobno, ...)
 * leto gradnje
-* nadstropje
 * regija
+* upravna enota
+* občina
 * ali je primerno za študente
 
 ## Delovne hipoteze in vprasanja
