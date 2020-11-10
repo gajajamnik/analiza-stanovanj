@@ -1,7 +1,7 @@
 # Analiza stanovanj
 projektna naloga pri Programiranju 1
 
-Za projektno nalogo pri Programiranju 1 bom analizirala (trenutno 1692) stanovanj, ki so na voljo za oddajo v Sloveniji preko spletne strani [Nepremicnine](https://www.nepremicnine.net/)
+Za projektno nalogo pri Programiranju 1 bom analizirala (trenutno 1711) stanovanj, ki so na voljo za oddajo v Sloveniji preko spletne strani [Nepremicnine](https://www.nepremicnine.net/)
 
 ## Za vsako stanovanje bom zajela
 * referencno stevilko stanovanja
