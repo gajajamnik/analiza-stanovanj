@@ -100,8 +100,9 @@ def izloci_podatke(stran):
 
 def obdelaj_podatke(slovar):
     slovar['id'] = slovar['id'].strip('\'')
-    slovar['kvadratura'] = slovar['kvadratura'].strip('\'')
-    slovar['cena'] = slovar['cena'].strip('\'')
+    slovar['kvadratura'] = slovar['kvadratura'].strip('\'').replace('.', '').replace(',', '.')
+    slovar['cena'] = slovar['cena'].strip('\'').replace('.', '').replace(',', '.')
+    slovar['tip'] = slovar['tip'].strip('\"').strip()
 
 
 #zajame strani na katerih so stanovanja primerna za studente in pobere csv
