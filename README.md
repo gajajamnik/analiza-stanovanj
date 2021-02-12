@@ -15,7 +15,7 @@ Za projektno nalogo pri Programiranju 1 bom analizirala (trenutno 1711) stanovan
 * ali je primerno za študente
 
 ## Delovne hipoteze in vprasanja
-* Najdrazja najmenina na kvadraturo je na obali, takoj za tem pa ji sledi Ljubljana.
+* Najdražja najmenina na kvadraturo je na obali, takoj za tem pa ji sledi Ljubljana.
 * V katerih regijah se oddajajo največja stanovanja?
 * V kateri regiji je največ aktivnih oglasov?
 * Starejša stanovanja se oddajajo po višji ceni kot mlajša.
