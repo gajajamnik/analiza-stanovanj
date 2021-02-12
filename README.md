@@ -15,7 +15,9 @@ Za projektno nalogo pri Programiranju 1 bom analizirala (trenutno 1711) stanovan
 * ali je primerno za študente
 
 ## Delovne hipoteze in vprasanja
-* Najdrazja najmenina na kvadraturo je na Primorskem in v okolici Ljubljane
-* Velikost stanovanja (stevilo sob) ima vecji pomen za ceno kot kvadratura
-* V kateri regiji je največ aktivnih oglasov in v kateri regiji oddajajo novejša stanovanja(po letu 2010)
-* Ali so stanovanja označena kot primerna za študente dražja v primerjavi z ostalimi? Ali spadajo ta stanovanja med straejša? (hipoteza: da)
+* Najdrazja najmenina na kvadraturo je na obali, takoj za tem pa ji sledi Ljubljana.
+* V katerih regijah se oddajajo največja stanovanja?
+* V kateri regiji je največ aktivnih oglasov?
+* Starejša stanovanja se oddajajo po višji ceni kot mlajša.
+* Kakšen vpliv ima tip stanovanja (število sob) na višino najemnine?
+* Stanovanja označena kot primerna za študente so dražja v primerjavi z ostalimi.
