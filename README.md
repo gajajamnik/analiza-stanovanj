@@ -1,3 +1,6 @@
+
+
+----------------------------------------------------------------------
 # Analiza stanovanj
 projektna naloga pri Programiranju 1
 
